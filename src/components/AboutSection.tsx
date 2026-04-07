@@ -38,10 +38,13 @@ const AboutSection = () => {
             className="space-y-6"
           >
             <p className="text-muted-foreground text-lg leading-relaxed">
-              <strong className="text-foreground">Digital Marketing RDC</strong> est une agence de marketing digital basée en République Démocratique du Congo. Nous accompagnons les entreprises, marques et entrepreneurs dans leur transformation digitale.
+              <strong className="text-foreground">DLM</strong> est une agence de gestion de communication spécialisée dans le développement de la visibilité et de la performance des entreprises.
             </p>
             <p className="text-muted-foreground text-lg leading-relaxed">
-              Notre expertise couvre l'ensemble du spectre digital : de la stratégie de contenu à la gestion des réseaux sociaux, en passant par la publicité en ligne et le développement web.
+              Nous accompagnons les marques dans leur croissance à travers des solutions digitales modernes, notamment la gestion des réseaux sociaux, la création de contenus visuels et vidéos, ainsi que la mise en place de stratégies marketing adaptées.
+            </p>
+            <p className="text-muted-foreground text-lg leading-relaxed">
+              Notre objectif est d'aider chaque entreprise à attirer plus de clients, améliorer son image et structurer sa présence en ligne de manière professionnelle.
             </p>
           </motion.div>
         </div>
@@ -52,12 +55,12 @@ const AboutSection = () => {
             {
               icon: Target,
               title: "Notre Mission",
-              description: "Démocratiser le marketing digital en RDC et offrir aux entreprises locales les outils pour rivaliser sur la scène internationale.",
+              description: "Aider chaque entreprise à attirer plus de clients, améliorer son image et structurer sa présence en ligne de manière professionnelle.",
             },
             {
               icon: Eye,
               title: "Notre Vision",
-              description: "Devenir la référence incontournable du marketing digital en Afrique centrale, en formant et accompagnant la prochaine génération d'entrepreneurs digitaux.",
+              description: "Se positionner comme une agence jeune, dynamique et ambitieuse, avec une vision orientée vers l'expansion et l'innovation dans le domaine du digital.",
             },
             {
               icon: TrendingUp,
