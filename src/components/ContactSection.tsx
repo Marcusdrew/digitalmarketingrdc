@@ -51,7 +51,7 @@ const ContactSection = () => {
             <div className="space-y-5">
               {[
                 { icon: Mail, label: "digitalmarketingrdc@gmail.com" },
-                { icon: Phone, label: "+243 822 882 271" },
+                { icon: Phone, label: "+243 896 064 088" },
                 { icon: MapPin, label: "Kinshasa, RD Congo" },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-4">
