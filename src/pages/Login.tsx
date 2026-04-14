@@ -11,18 +11,34 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
-    if (error) {
-      toast({ title: "Erreur", description: error.message, variant: "destructive" });
+
+    if (isSignUp) {
+      const { error } = await supabase.auth.signUp({ email, password });
+      setLoading(false);
+      if (error) {
+        toast({ title: "Erreur", description: error.message, variant: "destructive" });
+      } else {
+        toast({
+          title: "Inscription réussie",
+          description: "Vérifiez votre email pour confirmer votre compte.",
+        });
+        setIsSignUp(false);
+      }
     } else {
-      navigate("/admin");
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      setLoading(false);
+      if (error) {
+        toast({ title: "Erreur", description: error.message, variant: "destructive" });
+      } else {
+        navigate("/admin");
+      }
     }
   };
 
@@ -32,9 +48,11 @@ const Login = () => {
         <div className="flex flex-col items-center mb-8">
           <img src={logo} alt="DLM" className="h-16 w-16 rounded-full object-cover mb-4" />
           <h1 className="font-display text-2xl font-bold text-gradient">Administration DLM</h1>
-          <p className="text-muted-foreground text-sm mt-1">Connectez-vous pour gérer le contenu</p>
+          <p className="text-muted-foreground text-sm mt-1">
+            {isSignUp ? "Créez votre compte" : "Connectez-vous pour gérer le contenu"}
+          </p>
         </div>
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
@@ -58,10 +76,19 @@ const Login = () => {
             />
           </div>
           <Button type="submit" disabled={loading} className="w-full bg-gradient-brand hover:opacity-90">
-            {loading ? "Connexion..." : "Se connecter"}
+            {loading ? "Chargement..." : isSignUp ? "S'inscrire" : "Se connecter"}
           </Button>
         </form>
-        <div className="text-center mt-6">
+        <div className="text-center mt-4">
+          <button
+            type="button"
+            onClick={() => setIsSignUp(!isSignUp)}
+            className="text-sm text-primary hover:underline transition-colors"
+          >
+            {isSignUp ? "Déjà un compte ? Se connecter" : "Pas de compte ? S'inscrire"}
+          </button>
+        </div>
+        <div className="text-center mt-4">
           <a href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             ← Retour au site
           </a>
