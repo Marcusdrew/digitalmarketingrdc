@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      portfolio_media: {
+        Row: {
+          created_at: string
+          id: string
+          media_type: string
+          media_url: string
+          position: number
+          project_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          media_type?: string
+          media_url: string
+          position?: number
+          project_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          media_type?: string
+          media_url?: string
+          position?: number
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_media_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portfolio_projects: {
         Row: {
           category: string
