@@ -59,6 +59,27 @@ const Admin = () => {
     setLoading(false);
   }, []);
 
+  const fetchVisitStats = useCallback(async () => {
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    const weekStart = new Date(now.getTime() - 7 * 86400000).toISOString();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+    const [todayRes, weekRes, monthRes, totalRes] = await Promise.all([
+      supabase.from("site_visits").select("id", { count: "exact", head: true }).gte("created_at", todayStart),
+      supabase.from("site_visits").select("id", { count: "exact", head: true }).gte("created_at", weekStart),
+      supabase.from("site_visits").select("id", { count: "exact", head: true }).gte("created_at", monthStart),
+      supabase.from("site_visits").select("id", { count: "exact", head: true }),
+    ]);
+
+    setVisitStats({
+      today: todayRes.count || 0,
+      week: weekRes.count || 0,
+      month: monthRes.count || 0,
+      total: totalRes.count || 0,
+    });
+  }, []);
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
