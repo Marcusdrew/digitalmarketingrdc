@@ -25,6 +25,7 @@ const Admin = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectMediaCounts, setProjectMediaCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [visitStats, setVisitStats] = useState({ today: 0, week: 0, month: 0, total: 0 });
   const [uploading, setUploading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
@@ -75,6 +76,7 @@ const Admin = () => {
         return;
       }
       fetchProjects();
+      fetchVisitStats();
     };
     checkAuth();
   }, [navigate, toast, fetchProjects]);
