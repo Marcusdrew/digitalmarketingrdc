@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, LogOut, ArrowLeft, Upload, Image, Video, X } from "lucide-react";
+import { Trash2, Plus, LogOut, ArrowLeft, Upload, Image, Video, X, Eye, TrendingUp, Calendar } from "lucide-react";
 import logo from "@/assets/logo-dlm.jpeg";
 
 type Project = Tables<"portfolio_projects">;
