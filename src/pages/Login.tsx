@@ -11,7 +11,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -19,26 +18,12 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password });
-      setLoading(false);
-      if (error) {
-        toast({ title: "Erreur", description: error.message, variant: "destructive" });
-      } else {
-        toast({
-          title: "Inscription réussie",
-          description: "Vérifiez votre email pour confirmer votre compte.",
-        });
-        setIsSignUp(false);
-      }
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (error) {
+      toast({ title: "Erreur", description: error.message, variant: "destructive" });
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      setLoading(false);
-      if (error) {
-        toast({ title: "Erreur", description: error.message, variant: "destructive" });
-      } else {
-        navigate("/admin");
-      }
+      navigate("/admin");
     }
   };
 
@@ -49,7 +34,7 @@ const Login = () => {
           <img src={logo} alt="DLM" className="h-16 w-16 rounded-full object-cover mb-4" />
           <h1 className="font-display text-2xl font-bold text-gradient">Administration DLM</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {isSignUp ? "Créez votre compte" : "Connectez-vous pour gérer le contenu"}
+            Connectez-vous pour gérer le contenu
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -76,18 +61,9 @@ const Login = () => {
             />
           </div>
           <Button type="submit" disabled={loading} className="w-full bg-gradient-brand hover:opacity-90">
-            {loading ? "Chargement..." : isSignUp ? "S'inscrire" : "Se connecter"}
+            {loading ? "Chargement..." : "Se connecter"}
           </Button>
         </form>
-        <div className="text-center mt-4">
-          <button
-            type="button"
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-sm text-primary hover:underline transition-colors"
-          >
-            {isSignUp ? "Déjà un compte ? Se connecter" : "Pas de compte ? S'inscrire"}
-          </button>
-        </div>
         <div className="text-center mt-4">
           <a href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             ← Retour au site
