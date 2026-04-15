@@ -5,10 +5,13 @@ import ServicesSection from "@/components/ServicesSection";
 import PortfolioSection from "@/components/PortfolioSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
+import VisitTracker from "@/components/VisitTracker";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
+      <VisitTracker />
       <Navbar />
       <HeroSection />
       <AboutSection />
@@ -16,6 +19,7 @@ const Index = () => {
       <PortfolioSection />
       <ContactSection />
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 };

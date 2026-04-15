@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, LogOut, ArrowLeft, Upload, Image, Video, X } from "lucide-react";
+import { Trash2, Plus, LogOut, ArrowLeft, Upload, Image, Video, X, Eye, TrendingUp, Calendar } from "lucide-react";
 import logo from "@/assets/logo-dlm.jpeg";
 
 type Project = Tables<"portfolio_projects">;
@@ -25,6 +25,7 @@ const Admin = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectMediaCounts, setProjectMediaCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [visitStats, setVisitStats] = useState({ today: 0, week: 0, month: 0, total: 0 });
   const [uploading, setUploading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
@@ -58,6 +59,27 @@ const Admin = () => {
     setLoading(false);
   }, []);
 
+  const fetchVisitStats = useCallback(async () => {
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    const weekStart = new Date(now.getTime() - 7 * 86400000).toISOString();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+    const [todayRes, weekRes, monthRes, totalRes] = await Promise.all([
+      supabase.from("site_visits").select("id", { count: "exact", head: true }).gte("created_at", todayStart),
+      supabase.from("site_visits").select("id", { count: "exact", head: true }).gte("created_at", weekStart),
+      supabase.from("site_visits").select("id", { count: "exact", head: true }).gte("created_at", monthStart),
+      supabase.from("site_visits").select("id", { count: "exact", head: true }),
+    ]);
+
+    setVisitStats({
+      today: todayRes.count || 0,
+      week: weekRes.count || 0,
+      month: monthRes.count || 0,
+      total: totalRes.count || 0,
+    });
+  }, []);
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -75,6 +97,7 @@ const Admin = () => {
         return;
       }
       fetchProjects();
+      fetchVisitStats();
     };
     checkAuth();
   }, [navigate, toast, fetchProjects]);
@@ -247,7 +270,36 @@ const Admin = () => {
       </header>
 
       <main className="container mx-auto px-6 py-8">
-        {/* Stats */}
+        {/* Visitor Stats */}
+        <div className="mb-8">
+          <h2 className="font-display text-xl font-bold mb-4 flex items-center gap-2">
+            <Eye size={20} className="text-secondary" /> Statistiques visiteurs
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="glass rounded-xl p-4 text-center">
+              <Calendar size={18} className="mx-auto text-secondary mb-1" />
+              <p className="text-2xl font-bold text-gradient">{visitStats.today}</p>
+              <p className="text-sm text-muted-foreground">Aujourd'hui</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <TrendingUp size={18} className="mx-auto text-secondary mb-1" />
+              <p className="text-2xl font-bold text-gradient">{visitStats.week}</p>
+              <p className="text-sm text-muted-foreground">Cette semaine</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <TrendingUp size={18} className="mx-auto text-secondary mb-1" />
+              <p className="text-2xl font-bold text-gradient">{visitStats.month}</p>
+              <p className="text-sm text-muted-foreground">Ce mois</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <Eye size={18} className="mx-auto text-secondary mb-1" />
+              <p className="text-2xl font-bold text-gradient">{visitStats.total}</p>
+              <p className="text-sm text-muted-foreground">Total</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Portfolio Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="glass rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-gradient">{projects.length}</p>
