@@ -270,7 +270,36 @@ const Admin = () => {
       </header>
 
       <main className="container mx-auto px-6 py-8">
-        {/* Stats */}
+        {/* Visitor Stats */}
+        <div className="mb-8">
+          <h2 className="font-display text-xl font-bold mb-4 flex items-center gap-2">
+            <Eye size={20} className="text-secondary" /> Statistiques visiteurs
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="glass rounded-xl p-4 text-center">
+              <Calendar size={18} className="mx-auto text-secondary mb-1" />
+              <p className="text-2xl font-bold text-gradient">{visitStats.today}</p>
+              <p className="text-sm text-muted-foreground">Aujourd'hui</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <TrendingUp size={18} className="mx-auto text-secondary mb-1" />
+              <p className="text-2xl font-bold text-gradient">{visitStats.week}</p>
+              <p className="text-sm text-muted-foreground">Cette semaine</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <TrendingUp size={18} className="mx-auto text-secondary mb-1" />
+              <p className="text-2xl font-bold text-gradient">{visitStats.month}</p>
+              <p className="text-sm text-muted-foreground">Ce mois</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <Eye size={18} className="mx-auto text-secondary mb-1" />
+              <p className="text-2xl font-bold text-gradient">{visitStats.total}</p>
+              <p className="text-sm text-muted-foreground">Total</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Portfolio Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="glass rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-gradient">{projects.length}</p>
