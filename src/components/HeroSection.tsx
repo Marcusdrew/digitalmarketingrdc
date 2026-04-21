@@ -62,9 +62,9 @@ const HeroSection = () => {
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 max-w-3xl mx-auto"
         >
           {[
-            { value: "50+", label: "Projets réalisés" },
+            { value: "10+", label: "Projets réalisés" },
             { value: "98%", label: "Clients satisfaits" },
-            { value: "3+", label: "Années d'expérience" },
+            { value: "2+", label: "Années d'expérience" },
             { value: "24/7", label: "Support client" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
