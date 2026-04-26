@@ -126,9 +126,12 @@ const AdminVisitStats = () => {
 
   return (
     <div className="mb-8">
-      <h2 className="font-display text-xl font-bold mb-4 flex items-center gap-2">
+      <h2 className="font-display text-xl font-bold mb-1 flex items-center gap-2">
         <Eye size={20} className="text-secondary" /> Statistiques visiteurs
       </h2>
+      <p className="text-xs text-muted-foreground mb-4">
+        Règle de comptage : <strong>1 appareil = 1 vue par jour</strong> (anti-triche côté serveur).
+      </p>
 
       {/* View tabs */}
       <div className="flex gap-2 mb-4">

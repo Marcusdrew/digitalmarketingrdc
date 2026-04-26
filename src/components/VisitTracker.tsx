@@ -2,11 +2,17 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 const getVisitorId = (): string => {
-  const key = "dlm_visitor_id";
+  // v2: nouveau système de tracking propre (1 appareil = 1 vue/jour côté serveur)
+  const key = "dlm_visitor_id_v2";
   let id = localStorage.getItem(key);
   if (!id) {
     id = crypto.randomUUID();
     localStorage.setItem(key, id);
+    // Nettoyer l'ancien ID et les anciennes clés de tracking
+    localStorage.removeItem("dlm_visitor_id");
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith("dlm_visit_"))
+      .forEach((k) => localStorage.removeItem(k));
   }
   return id;
 };
