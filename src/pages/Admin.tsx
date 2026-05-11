@@ -251,6 +251,7 @@ const Admin = () => {
       </header>
 
       <main className="container mx-auto px-6 py-8">
+        <MfaSection />
         <AdminVisitStats />
 
 
