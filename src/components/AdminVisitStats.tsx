@@ -24,6 +24,7 @@ const AdminVisitStats = () => {
   const [dailyStats, setDailyStats] = useState<{ date: string; visits: number; unique: number }[]>([]);
   const [monthlyStats, setMonthlyStats] = useState<{ month: number; year: number; visits: number; unique: number }[]>([]);
   const [dayDetail, setDayDetail] = useState<DayDetail | null>(null);
+  const [topCountries, setTopCountries] = useState<{ country: string; count: number }[]>([]);
 
   const fetchOverview = useCallback(async () => {
     const now = new Date();
