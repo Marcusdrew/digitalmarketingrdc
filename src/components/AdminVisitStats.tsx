@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Eye, TrendingUp, Calendar, ChevronLeft, ChevronRight, Users, Clock, X } from "lucide-react";
+import { Eye, TrendingUp, Calendar, ChevronLeft, ChevronRight, Users, Clock, X, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const MONTHS_FR = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
