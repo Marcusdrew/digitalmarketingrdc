@@ -6,9 +6,11 @@ const getVisitorId = async (): Promise<string> => {
   // L'ancienne empreinte pouvait être identique sur deux téléphones du même modèle.
   const key = "dlm_visitor_id_v4";
   const storedId = localStorage.getItem(key);
-  if (storedId) return storedId;
+  if (storedId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(storedId)) {
+    return storedId;
+  }
 
-  const id = `device_${crypto.randomUUID()}`;
+  const id = crypto.randomUUID();
 
   localStorage.setItem(key, id);
   localStorage.removeItem("dlm_visitor_id");
