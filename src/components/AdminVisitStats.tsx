@@ -225,6 +225,32 @@ const AdminVisitStats = () => {
         </div>
       )}
 
+      {view === "overview" && (
+        <div className="glass rounded-xl p-4 mt-4">
+          <h3 className="font-display font-bold flex items-center gap-2 mb-3">
+            <Globe size={16} className="text-secondary" /> Top pays visiteurs
+          </h3>
+          {topCountries.length === 0 ? (
+            <p className="text-xs text-muted-foreground">Aucune donnée de géolocalisation pour l'instant.</p>
+          ) : (
+            <div className="space-y-2">
+              {topCountries.map((c) => {
+                const max = topCountries[0]?.count || 1;
+                return (
+                  <div key={c.country} className="flex items-center gap-3">
+                    <span className="text-sm w-32 truncate">{c.country}</span>
+                    <div className="flex-1 bg-background/40 rounded-full h-2 overflow-hidden">
+                      <div className="bg-gradient-brand h-full" style={{ width: `${(c.count / max) * 100}%` }} />
+                    </div>
+                    <span className="text-xs text-muted-foreground w-12 text-right">{c.count}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
       {view === "daily" && (
         <div>
           <div className="flex items-center justify-between mb-4">
