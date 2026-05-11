@@ -38,11 +38,21 @@ const VisitTracker = () => {
   useEffect(() => {
     const trackVisit = async () => {
       try {
+        // Ignorer le trafic de prévisualisation Lovable et les bots
+        const host = window.location.hostname;
+        const isPreview =
+          host.endsWith(".lovableproject.com") ||
+          host.startsWith("id-preview--") ||
+          host === "localhost" ||
+          host === "127.0.0.1";
+        const ua = navigator.userAgent || "";
+        const isBot = /bot|crawler|spider|crawling|preview|headless|lighthouse|pingdom/i.test(ua);
+        if (isPreview || isBot) return;
+
         const visitorId = await getVisitorId();
         const today = new Date().toISOString().split("T")[0];
         const trackKey = `dlm_visit_${today}`;
 
-        // Only count once per device per day
         if (localStorage.getItem(trackKey)) return;
 
         await supabase.functions.invoke("log-visit", {
