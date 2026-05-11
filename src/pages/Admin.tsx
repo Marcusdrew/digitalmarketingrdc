@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Plus, LogOut, ArrowLeft, Upload, Image, Video, X } from "lucide-react";
 import AdminVisitStats from "@/components/AdminVisitStats";
+import MfaSection from "@/components/MfaSection";
 import logo from "@/assets/logo-dlm.jpeg";
 
 type Project = Tables<"portfolio_projects">;
