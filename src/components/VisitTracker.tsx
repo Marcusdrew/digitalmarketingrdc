@@ -45,11 +45,13 @@ const VisitTracker = () => {
         // Only count once per device per day
         if (localStorage.getItem(trackKey)) return;
 
-        await supabase.from("site_visits").insert({
-          page: window.location.pathname,
-          referrer: document.referrer || null,
-          user_agent: navigator.userAgent,
-          visitor_id: visitorId,
+        await supabase.functions.invoke("log-visit", {
+          body: {
+            visitor_id: visitorId,
+            page: window.location.pathname,
+            referrer: document.referrer || null,
+            user_agent: navigator.userAgent,
+          },
         });
 
         localStorage.setItem(trackKey, "1");
