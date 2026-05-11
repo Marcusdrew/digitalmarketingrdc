@@ -42,7 +42,7 @@ const VisitTracker = () => {
         const host = window.location.hostname;
         const isPreview =
           host.endsWith(".lovableproject.com") ||
-          host.endsWith(".lovable.app") ||
+          host.startsWith("id-preview--") ||
           host === "localhost" ||
           host === "127.0.0.1";
         const ua = navigator.userAgent || "";
