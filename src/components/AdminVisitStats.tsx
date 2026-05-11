@@ -51,6 +51,19 @@ const AdminVisitStats = () => {
       total: totalRes.data?.length || 0,
       totalUnique: countUnique(totalRes.data),
     });
+
+    const { data: geo } = await supabase.from("site_visits").select("country").not("country", "is", null);
+    const counts: Record<string, number> = {};
+    (geo || []).forEach((r: any) => {
+      const c = r.country || "Inconnu";
+      counts[c] = (counts[c] || 0) + 1;
+    });
+    setTopCountries(
+      Object.entries(counts)
+        .map(([country, count]) => ({ country, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 6)
+    );
   }, []);
 
   const fetchDaily = useCallback(async () => {
