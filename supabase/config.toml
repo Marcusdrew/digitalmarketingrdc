@@ -1,1 +1,4 @@
 project_id = "pbmcekoonhmhndfvvkih"
+
+[functions.log-visit]
+verify_jwt = false

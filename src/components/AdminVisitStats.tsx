@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Eye, TrendingUp, Calendar, ChevronLeft, ChevronRight, Users, Clock, X } from "lucide-react";
+import { Eye, TrendingUp, Calendar, ChevronLeft, ChevronRight, Users, Clock, X, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const MONTHS_FR = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
@@ -24,6 +24,7 @@ const AdminVisitStats = () => {
   const [dailyStats, setDailyStats] = useState<{ date: string; visits: number; unique: number }[]>([]);
   const [monthlyStats, setMonthlyStats] = useState<{ month: number; year: number; visits: number; unique: number }[]>([]);
   const [dayDetail, setDayDetail] = useState<DayDetail | null>(null);
+  const [topCountries, setTopCountries] = useState<{ country: string; count: number }[]>([]);
 
   const fetchOverview = useCallback(async () => {
     const now = new Date();
@@ -50,6 +51,19 @@ const AdminVisitStats = () => {
       total: totalRes.data?.length || 0,
       totalUnique: countUnique(totalRes.data),
     });
+
+    const { data: geo } = await supabase.from("site_visits").select("country").not("country", "is", null);
+    const counts: Record<string, number> = {};
+    (geo || []).forEach((r: any) => {
+      const c = r.country || "Inconnu";
+      counts[c] = (counts[c] || 0) + 1;
+    });
+    setTopCountries(
+      Object.entries(counts)
+        .map(([country, count]) => ({ country, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 6)
+    );
   }, []);
 
   const fetchDaily = useCallback(async () => {
@@ -208,6 +222,32 @@ const AdminVisitStats = () => {
               <p className="text-sm text-muted-foreground mt-1">{label}</p>
             </div>
           ))}
+        </div>
+      )}
+
+      {view === "overview" && (
+        <div className="glass rounded-xl p-4 mt-4">
+          <h3 className="font-display font-bold flex items-center gap-2 mb-3">
+            <Globe size={16} className="text-secondary" /> Top pays visiteurs
+          </h3>
+          {topCountries.length === 0 ? (
+            <p className="text-xs text-muted-foreground">Aucune donnée de géolocalisation pour l'instant.</p>
+          ) : (
+            <div className="space-y-2">
+              {topCountries.map((c) => {
+                const max = topCountries[0]?.count || 1;
+                return (
+                  <div key={c.country} className="flex items-center gap-3">
+                    <span className="text-sm w-32 truncate">{c.country}</span>
+                    <div className="flex-1 bg-background/40 rounded-full h-2 overflow-hidden">
+                      <div className="bg-gradient-brand h-full" style={{ width: `${(c.count / max) * 100}%` }} />
+                    </div>
+                    <span className="text-xs text-muted-foreground w-12 text-right">{c.count}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 

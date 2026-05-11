@@ -87,6 +87,9 @@ export type Database = {
       }
       site_visits: {
         Row: {
+          city: string | null
+          country: string | null
+          country_code: string | null
           created_at: string
           id: string
           page: string
@@ -96,6 +99,9 @@ export type Database = {
           visitor_id: string | null
         }
         Insert: {
+          city?: string | null
+          country?: string | null
+          country_code?: string | null
           created_at?: string
           id?: string
           page?: string
@@ -105,6 +111,9 @@ export type Database = {
           visitor_id?: string | null
         }
         Update: {
+          city?: string | null
+          country?: string | null
+          country_code?: string | null
           created_at?: string
           id?: string
           page?: string
