@@ -38,13 +38,13 @@ const AboutSection = () => {
             className="space-y-6"
           >
             <p className="text-muted-foreground text-lg leading-relaxed">
-              <strong className="text-foreground">DLM</strong> est une agence de gestion de communication spécialisée dans le développement de la visibilité et de la performance des entreprises.
+              <strong className="text-foreground">DLM (Digital Marketing RDC)</strong> est une agence de marketing digital et de communication basée à Kinshasa, en République Démocratique du Congo, spécialisée dans la visibilité et la performance des entreprises locales.
             </p>
             <p className="text-muted-foreground text-lg leading-relaxed">
-              Nous accompagnons les marques dans leur croissance à travers des solutions digitales modernes, notamment la gestion des réseaux sociaux, la création de contenus visuels et vidéos, ainsi que la mise en place de stratégies marketing adaptées.
+              Nous accompagnons les marques de Kinshasa et de toute la RDC dans leur croissance grâce à des solutions digitales modernes : gestion des réseaux sociaux (community management), création de contenus visuels et vidéos, création de site web et stratégies marketing sur mesure.
             </p>
             <p className="text-muted-foreground text-lg leading-relaxed">
-              Notre objectif est d'aider chaque entreprise à attirer plus de clients, améliorer son image et structurer sa présence en ligne de manière professionnelle.
+              Notre objectif : aider chaque entreprise congolaise à attirer plus de clients, améliorer son image et structurer sa présence en ligne de manière professionnelle.
             </p>
           </motion.div>
         </div>

@@ -28,13 +28,11 @@ const HeroSection = () => {
           </motion.div>
 
           <h1 className="font-display text-5xl md:text-7xl font-bold leading-tight mb-6">
-            Propulsez votre{" "}
-            <span className="text-gradient">présence digitale</span>{" "}
-            vers de nouveaux sommets
+            Agence de <span className="text-gradient">marketing digital</span> à Kinshasa, RDC
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            Nous créons des stratégies digitales sur mesure pour transformer votre visibilité en ligne et générer des résultats concrets pour votre entreprise.
+            DLM accompagne les entreprises de Kinshasa et de toute la RDC : community management, création de site web, publicité Facebook & Instagram et stratégie digitale sur mesure.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
