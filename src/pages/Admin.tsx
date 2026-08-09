@@ -8,10 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, LogOut, ArrowLeft, Upload, Image, Video, X } from "lucide-react";
+import { Trash2, Plus, LogOut, ArrowLeft, Upload, Image, Video, X, Camera } from "lucide-react";
 import AdminVisitStats from "@/components/AdminVisitStats";
 import MfaSection from "@/components/MfaSection";
+import VideoPreview from "@/components/VideoPreview";
 import logo from "@/assets/logo-dlm.jpeg";
+
 
 type Project = Tables<"portfolio_projects">;
 
@@ -311,16 +313,40 @@ const Admin = () => {
             {/* Multi-file upload */}
             <div>
               <Label>Fichiers (photos et vidéos) *</Label>
-              <p className="text-xs text-muted-foreground mb-2">Vous pouvez ajouter autant de photos et vidéos que vous voulez</p>
-              
+              <p className="text-xs text-muted-foreground mb-3">
+                Depuis votre téléphone ou votre ordinateur : ajoutez autant de photos et de vidéos que vous voulez.
+              </p>
+
+              {/* Upload buttons — separate inputs so mobile shows the right picker */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+                <label className="glass rounded-xl px-3 py-3 flex flex-col items-center gap-1 cursor-pointer hover:border-primary border border-border transition-colors text-center">
+                  <Image size={18} className="text-primary" />
+                  <span className="text-xs">Photos</span>
+                  <input type="file" accept="image/*" multiple onChange={handleAddFiles} className="hidden" />
+                </label>
+                <label className="glass rounded-xl px-3 py-3 flex flex-col items-center gap-1 cursor-pointer hover:border-primary border border-border transition-colors text-center">
+                  <Video size={18} className="text-secondary" />
+                  <span className="text-xs">Vidéos</span>
+                  <input type="file" accept="video/*" multiple onChange={handleAddFiles} className="hidden" />
+                </label>
+                <label className="glass rounded-xl px-3 py-3 flex flex-col items-center gap-1 cursor-pointer hover:border-primary border border-border transition-colors text-center">
+                  <Camera size={18} className="text-primary" />
+                  <span className="text-xs">Photo caméra</span>
+                  <input type="file" accept="image/*" capture="environment" onChange={handleAddFiles} className="hidden" />
+                </label>
+                <label className="glass rounded-xl px-3 py-3 flex flex-col items-center gap-1 cursor-pointer hover:border-primary border border-border transition-colors text-center">
+                  <Video size={18} className="text-primary" />
+                  <span className="text-xs">Filmer</span>
+                  <input type="file" accept="video/*" capture="environment" onChange={handleAddFiles} className="hidden" />
+                </label>
+              </div>
+
               <div className="flex flex-wrap gap-3 mb-3">
                 {mediaFiles.map((mf, i) => (
                   <div key={i} className="relative group">
                     <div className="w-24 h-24 rounded-lg overflow-hidden border border-border">
                       {mf.type === "video" ? (
-                        <div className="w-full h-full bg-gradient-brand flex items-center justify-center">
-                          <Video size={24} className="text-primary-foreground" />
-                        </div>
+                        <VideoPreview src={mf.preview} iconSize={18} />
                       ) : (
                         <img src={mf.preview} alt="" className="w-full h-full object-cover" />
                       )}
@@ -328,7 +354,7 @@ const Admin = () => {
                     <button
                       type="button"
                       onClick={() => removeFile(i)}
-                      className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                     >
                       <X size={12} />
                     </button>
@@ -337,19 +363,6 @@ const Admin = () => {
                     </span>
                   </div>
                 ))}
-
-                {/* Add more button */}
-                <label className="w-24 h-24 rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors">
-                  <Plus size={20} className="text-muted-foreground" />
-                  <span className="text-[10px] text-muted-foreground mt-1">Ajouter</span>
-                  <input
-                    type="file"
-                    accept="image/*,video/*"
-                    multiple
-                    onChange={handleAddFiles}
-                    className="hidden"
-                  />
-                </label>
               </div>
 
               {mediaFiles.length > 0 && (
@@ -357,7 +370,11 @@ const Admin = () => {
                   {mediaFiles.filter(f => f.type === "image").length} photo(s), {mediaFiles.filter(f => f.type === "video").length} vidéo(s)
                 </p>
               )}
+              {uploading && progress && (
+                <p className="text-xs text-secondary mt-2">{progress}</p>
+              )}
             </div>
+
 
             <div className="flex gap-3 pt-2">
               <Button type="submit" disabled={uploading} className="bg-gradient-brand hover:opacity-90">
