@@ -4,6 +4,8 @@ import { Play, Filter } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import PortfolioLightbox from "./PortfolioLightbox";
+import VideoPreview from "./VideoPreview";
+
 
 type Project = Tables<"portfolio_projects">;
 
@@ -135,14 +137,18 @@ const PortfolioSection = () => {
                 >
                   <div className="relative h-48 overflow-hidden">
                     {project.media_type === "video" ? (
-                      <div className="w-full h-full bg-gradient-brand flex items-center justify-center">
-                        {project.thumbnail_url ? (
-                          <img src={project.thumbnail_url} alt={project.title} className="w-full h-full object-cover" />
-                        ) : null}
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                          <Play size={40} className="text-primary-foreground" />
-                        </div>
-                      </div>
+                      project.thumbnail_url ? (
+                        <>
+                          <img src={project.thumbnail_url} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="rounded-full bg-black/45 p-3">
+                              <Play size={30} className="text-white" fill="currentColor" />
+                            </span>
+                          </div>
+                        </>
+                      ) : (
+                        <VideoPreview src={project.media_url} playOnHover iconSize={30} />
+                      )
                     ) : (
                       <img
                         src={project.media_url}
@@ -151,6 +157,7 @@ const PortfolioSection = () => {
                       />
                     )}
                   </div>
+
                   <div className="p-6">
                     <span className="text-xs font-semibold text-secondary uppercase tracking-wider">
                       {project.category}
