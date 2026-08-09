@@ -195,7 +195,9 @@ const Admin = () => {
       toast({ title: "Erreur", description: err.message, variant: "destructive" });
     } finally {
       setUploading(false);
+      setProgress("");
     }
+
   };
 
   const handleDelete = async (project: Project) => {
@@ -417,10 +419,9 @@ const Admin = () => {
               <div key={project.id} className="glass rounded-xl p-4 flex items-center gap-4">
                 <div className="h-16 w-16 rounded-lg overflow-hidden flex-shrink-0">
                   {project.media_type === "video" ? (
-                    <div className="w-full h-full bg-gradient-brand flex items-center justify-center">
-                      <Video size={20} className="text-primary-foreground" />
-                    </div>
+                    <VideoPreview src={project.media_url} iconSize={14} />
                   ) : (
+
                     <img src={project.media_url} alt={project.title} className="w-full h-full object-cover" />
                   )}
                 </div>
