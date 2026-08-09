@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Play, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import VideoPreview from "./VideoPreview";
+
 
 type Project = Tables<"portfolio_projects">;
 
@@ -126,12 +128,11 @@ const PortfolioLightbox = ({ project, media, currentIndex, onClose, onNavigate }
                       }`}
                     >
                       {m.media_type === "video" ? (
-                        <div className="w-full h-full bg-gradient-brand flex items-center justify-center">
-                          <Play size={16} className="text-primary-foreground" />
-                        </div>
+                        <VideoPreview src={m.media_url} iconSize={14} />
                       ) : (
                         <img src={m.media_url} alt="" className="w-full h-full object-cover" />
                       )}
+
                     </button>
                   ))}
                 </div>
