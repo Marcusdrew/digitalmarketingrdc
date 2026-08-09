@@ -31,7 +31,9 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState("");
   const [showForm, setShowForm] = useState(false);
+
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
