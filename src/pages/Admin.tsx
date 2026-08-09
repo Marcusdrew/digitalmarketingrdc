@@ -119,14 +119,18 @@ const Admin = () => {
     }
 
     setUploading(true);
+    setProgress("Préparation...");
     try {
       // Use first image as main media, or first file
       const firstImage = mediaFiles.find((f) => f.type === "image") || mediaFiles[0];
-      const mainExt = firstImage.file.name.split(".").pop();
+      const mainExt = firstImage.file.name.split(".").pop() || (firstImage.type === "video" ? "mp4" : "jpg");
       const mainPath = `${Date.now()}-main.${mainExt}`;
 
-      const { error: mainUploadErr } = await supabase.storage.from("portfolio").upload(mainPath, firstImage.file);
+      const { error: mainUploadErr } = await supabase.storage
+        .from("portfolio")
+        .upload(mainPath, firstImage.file, { contentType: firstImage.file.type || undefined });
       if (mainUploadErr) throw mainUploadErr;
+
 
       const { data: mainUrl } = supabase.storage.from("portfolio").getPublicUrl(mainPath);
 
@@ -150,17 +154,21 @@ const Admin = () => {
       for (let i = 0; i < mediaFiles.length; i++) {
         const mf = mediaFiles[i];
         let url: string;
+        setProgress(`Envoi ${i + 1}/${mediaFiles.length}...`);
 
         if (mf === firstImage) {
           url = mainUrl.publicUrl;
         } else {
-          const ext = mf.file.name.split(".").pop();
+          const ext = mf.file.name.split(".").pop() || (mf.type === "video" ? "mp4" : "jpg");
           const path = `${Date.now()}-${i}-${Math.random().toString(36).substring(7)}.${ext}`;
-          const { error: upErr } = await supabase.storage.from("portfolio").upload(path, mf.file);
+          const { error: upErr } = await supabase.storage
+            .from("portfolio")
+            .upload(path, mf.file, { contentType: mf.file.type || undefined });
           if (upErr) throw upErr;
           const { data: fileUrl } = supabase.storage.from("portfolio").getPublicUrl(path);
           url = fileUrl.publicUrl;
         }
+
 
         mediaInserts.push({
           project_id: project.id,
