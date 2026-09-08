@@ -119,70 +119,69 @@ const Admin = () => {
     }
 
     setUploading(true);
-    setProgress("Préparation...");
+    setProgress("Optimisation des fichiers...");
     try {
-      // Use first image as main media, or first file
-      const firstImage = mediaFiles.find((f) => f.type === "image") || mediaFiles[0];
-      const mainExt = firstImage.file.name.split(".").pop() || (firstImage.type === "video" ? "mp4" : "jpg");
-      const mainPath = `${Date.now()}-main.${mainExt}`;
+      const stamp = Date.now();
 
-      const { error: mainUploadErr } = await supabase.storage
-        .from("portfolio")
-        .upload(mainPath, firstImage.file, { contentType: firstImage.file.type || undefined });
-      if (mainUploadErr) throw mainUploadErr;
+      // 1) Compress images in parallel (huge speed win on phone photos)
+      const prepared = await runPool(
+        mediaFiles.map((mf) => async () => ({
+          type: mf.type,
+          file: mf.type === "image" ? await compressImage(mf.file) : mf.file,
+        })),
+        4
+      );
 
+      // 2) Upload everything in parallel with bounded concurrency
+      let done = 0;
+      const total = prepared.length;
+      setProgress(`Envoi 0/${total}...`);
 
-      const { data: mainUrl } = supabase.storage.from("portfolio").getPublicUrl(mainPath);
+      const urls = await runPool(
+        prepared.map((p, i) => async () => {
+          const ext = p.file.name.split(".").pop() || (p.type === "video" ? "mp4" : "jpg");
+          const path = `${stamp}-${i}-${Math.random().toString(36).substring(7)}.${ext}`;
+          const { error: upErr } = await supabase.storage
+            .from("portfolio")
+            .upload(path, p.file, { contentType: p.file.type || undefined, cacheControl: "31536000" });
+          if (upErr) throw upErr;
+          done++;
+          setProgress(`Envoi ${done}/${total}...`);
+          return supabase.storage.from("portfolio").getPublicUrl(path).data.publicUrl;
+        }),
+        3
+      );
 
-      // Create the project
+      // 3) Main media = first image if any, otherwise first file
+      const mainIndex = Math.max(0, prepared.findIndex((p) => p.type === "image"));
+
+      setProgress("Publication...");
       const { data: project, error: insertError } = await supabase
         .from("portfolio_projects")
         .insert({
           title,
           category,
           description: description || null,
-          media_type: firstImage.type,
-          media_url: mainUrl.publicUrl,
+          media_type: prepared[mainIndex].type,
+          media_url: urls[mainIndex],
         })
         .select()
         .single();
 
       if (insertError || !project) throw insertError || new Error("Échec de création");
 
-      // Upload all media files
-      const mediaInserts = [];
-      for (let i = 0; i < mediaFiles.length; i++) {
-        const mf = mediaFiles[i];
-        let url: string;
-        setProgress(`Envoi ${i + 1}/${mediaFiles.length}...`);
-
-        if (mf === firstImage) {
-          url = mainUrl.publicUrl;
-        } else {
-          const ext = mf.file.name.split(".").pop() || (mf.type === "video" ? "mp4" : "jpg");
-          const path = `${Date.now()}-${i}-${Math.random().toString(36).substring(7)}.${ext}`;
-          const { error: upErr } = await supabase.storage
-            .from("portfolio")
-            .upload(path, mf.file, { contentType: mf.file.type || undefined });
-          if (upErr) throw upErr;
-          const { data: fileUrl } = supabase.storage.from("portfolio").getPublicUrl(path);
-          url = fileUrl.publicUrl;
-        }
-
-
-        mediaInserts.push({
+      const { error: mediaErr } = await supabase.from("portfolio_media").insert(
+        prepared.map((p, i) => ({
           project_id: project.id,
-          media_url: url,
-          media_type: mf.type,
+          media_url: urls[i],
+          media_type: p.type,
           position: i,
-        });
-      }
-
-      const { error: mediaErr } = await supabase.from("portfolio_media").insert(mediaInserts);
+        }))
+      );
       if (mediaErr) throw mediaErr;
 
-      toast({ title: "Succès", description: `Réalisation ajoutée avec ${mediaFiles.length} fichier(s) !` });
-      
+      toast({ title: "Succès", description: `Réalisation ajoutée avec ${total} fichier(s) !` });
+
       // Cleanup
       mediaFiles.forEach((f) => URL.revokeObjectURL(f.preview));
       setTitle("");
@@ -197,7 +196,6 @@ const Admin = () => {
       setUploading(false);
       setProgress("");
     }
-
   };
 
   const handleDelete = async (project: Project) => {
