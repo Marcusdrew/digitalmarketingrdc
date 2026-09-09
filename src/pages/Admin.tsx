@@ -13,6 +13,7 @@ import AdminVisitStats from "@/components/AdminVisitStats";
 import MfaSection from "@/components/MfaSection";
 import VideoPreview from "@/components/VideoPreview";
 import logo from "@/assets/logo-dlm.jpeg";
+import { compressImage, runPool } from "@/lib/uploadHelpers";
 
 
 type Project = Tables<"portfolio_projects">;
