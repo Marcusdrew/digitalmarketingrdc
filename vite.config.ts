@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => ({
     {
       // GitHub Pages SPA fallback: serve the app for unknown paths like /login
       name: "gh-pages-spa-404",
-      apply: "build",
+      apply: "build" as const,
       closeBundle() {
         const out = path.resolve(__dirname, "dist");
         const index = path.join(out, "index.html");
